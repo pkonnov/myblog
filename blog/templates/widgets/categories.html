@@ -1,0 +1,36 @@
+<div class="row">
+  {% if categories_list|length > 3 %}
+    <div class="col-lg-6">
+      <ul class="list-unstyled mb-0">
+        {% for category in categories_list_first_part %}
+          <li>
+            <a href="{% url 'blog:article_categories_list' categoryName=category.urlstext %}">{{ category.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-lg-6">
+      <ul class="list-unstyled mb-0">
+        {% for category in categories_list_second_part %}
+          <li>
+            <a href="{% url 'blog:article_categories_list' categoryName=category.urlstext %}">{{ category.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% elif categories_list|length > 0 and  categories_list|length <= 3 %}
+    <div class="col-lg-12 text-center">
+      <ul class="list-unstyled mb-0">
+        {% for category in categories_list %}
+          <li>
+            <a href="{% url 'blog:article_categories_list' categoryName=category.urlstext %}">{{ category.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <div class="col-lg-12 text-center">
+      <p>No categories.</p>
+    </div>
+  {% endif %}
+</div>

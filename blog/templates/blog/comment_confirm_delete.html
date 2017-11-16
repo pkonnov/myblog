@@ -1,0 +1,15 @@
+{% extends 'blog/content.html' %}
+
+{% block place_article %}
+  <div class="card my-4">
+    <h5 class="card-header">Delete Comment:</h5>
+    <div class="card-body">
+      <form action="" method="post">{% csrf_token %}
+        <p>Are you sure you want to delete "{{ object }}"?</p>
+        <input type="button" class="btn btn-primary" value="Cancel" onClick="javascript:history.go(-1);">&nbsp;&nbsp;
+
+        <button type="submit" class="btn btn-primary">Confirm</button>
+      </form>
+    </div>
+  </div>
+{% endblock place_article %}

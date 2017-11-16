@@ -1,0 +1,43 @@
+body {
+    padding-top: 54px;
+}
+ .span2{
+    display:flex;
+    justify-content: center; /*центрируем элемент по горизонтали */
+    align-items: center; /* и вертикали */
+    overflow: hidden; /* если элемент больше блока-родителя – обрезаем лишнее */
+    background: #454545;
+}
+
+.span2 img {
+  max-width: 100%;
+}
+
+.navbar-collapse.collapse.in {
+        display: block;!important;
+    }
+
+
+.id-article {
+  display:none;!important;
+  visibility:hidden;!important;
+}
+
+.error-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+.error-actions {
+  margin-top:15px;
+  margin-bottom:15px;
+}
+
+.error-actions .btn {
+  margin-right:10px;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-top: 56px;
+    }
+}

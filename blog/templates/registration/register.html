@@ -1,0 +1,41 @@
+{% extends 'blog/content.html' %}
+
+{% block place_article %}
+
+<div class="card my-4">
+  <h5 class="card-header">Registration:</h5>
+    <div class="card-body">
+      {% load myfilters %}
+      <form method="POST" class="post-form" action="">{% csrf_token %}
+        {% for field in form %}
+          <div class="form-group">
+            <label for='{{ field.label_tag }}'>{{ field.label_tag }}</label>
+            <div class="clearfix">{{ field|addclass:"form-control" }}
+              {% if field.help_text %}
+                <div class="clearfix">
+                  <p class="text-muted">
+                    {% autoescape off %}{{ field.help_text }}{% endautoescape %}
+                  </p>
+                </div>
+              {% endif %}
+              {% if field.errors %}
+                <div class="myerrors clearfix">
+
+                  <ul class="list-group">
+                    {% for field_error in field.errors %}
+                      <li class="list-group-item list-group-item-danger">
+                        {% autoescape off %}{{ field_error }}{% endautoescape %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Registration</button>
+      </form>
+    </div>
+  </div>
+{% endblock place_article %}

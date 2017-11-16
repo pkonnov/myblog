@@ -1,0 +1,178 @@
+{% load staticfiles %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My Blog</title>
+
+    <link rel="shortcut icon" href="{% static 'blog/img/favicon.png' %}" type="image/png">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'blog/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'blog/vendor/bootstrap/css/bootstrap-glyphicons.css' %}" rel="stylesheet">
+    <link href="{% static 'blog/vendor/bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'blog/vendor/bootstrap/css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'blog/css/blog.css' %}" rel="stylesheet">
+    <link href="{% static 'aboutblog/css/aboutblog.css' %}" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Navigation -->
+    {% include "blog/navigation.html" %}
+
+    <!-- Content -->
+    {% block content %}
+
+    {% endblock %}
+
+    <!-- Footer -->
+    {% include "blog/footer.html" %}
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'blog/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'blog/vendor/popper/popper.min.js' %}"></script>
+    <script src="{% static 'blog/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'blog/vendor/bootstrap/js/bootstrap-datepicker.min.js' %}"></script>
+
+    <!-- Ckeditor JavaScript -->
+    <script type="text/javascript" src="{% static 'blog/ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'blog/ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+    <!-- Calendar JavaScript -->
+    <script type="text/javascript">
+
+      $(document).ready(function () {
+
+
+        $('#containerCalendar').datepicker({
+          format: "yyyy-mm-dd",
+          todayBtn: "linked",
+          weekStart: 1,
+          todayHighlight: true
+        }).on('changeDate', showTestDate);
+
+        function showTestDate() {
+          var value = $('#containerCalendar').datepicker('getFormattedDate');
+          var calendarDate = new Date(value);
+          var dd = calendarDate.getDate();
+          var mm = calendarDate.getMonth() + 1;
+          var yyyy = calendarDate.getFullYear();
+          if(dd < 10) {
+            dd = '0'+ dd;
+          }
+          if(mm < 10) {
+            mm = '0'+ mm;
+          }
+          var urlCalendar = "/article/"+yyyy+"/"+mm+"/"+dd;
+          window.location.href = urlCalendar;
+
+        }
+
+        function compare(a1, a2) {
+          return a1.length == a2.length && a1.every((v,i)=>v === a2[i])
+        }
+
+        function formatDate(date) {
+
+           var dd = date.getDate();
+           if (dd < 10) dd = '0' + dd;
+
+           var mm = date.getMonth() + 1;
+           if (mm < 10) mm = '0' + mm;
+
+           var yyyy = date.getFullYear();
+
+           return dd + '-' + mm + '-' + yyyy;
+         }
+
+
+
+        var urlPathname = window.location.pathname;
+        if (urlPathname=='/') {
+
+          var myarr = [];
+          var children=$('#update-list').children('.id-article');
+          children.each(function () {
+            myarr[myarr.length] = String(this.value);
+          });
+
+          setInterval(function() {
+            $.getJSON(urlPathname + window.location.search,
+              function(data) {
+                var myarrJSON = [];
+                $.each( data.json_object, function( i, item ) {
+                      myarrJSON[myarrJSON.length] = String(data.json_object[i].id);
+                });
+
+
+                if (!compare(myarrJSON,myarr)) {
+
+                    document.getElementById('update-list').innerHTML = '';
+                    document.getElementById('paginated').innerHTML = '';
+
+
+                    $.each( data.json_object.reverse(), function( i, item ) {
+
+                      var jsImg = (data.json_object[i].image) ? jsImg='<div class="span2"><img  src="'+{{ MEDIA_URL }}+data.json_object[i].image+'"></div>' : '';
+                      var jsUrlArt = '<a href="/article/' + data.json_object[i].id + '/" class="btn btn-primary">Read More &rarr;</a>';
+                      var jsText = '<p class="card-text">'+data.json_object[i].text+'</p>';
+                      var jsDate = formatDate(new Date(data.json_object[i].published_date));
+                      var jsAuthor='<a href="/author/' + data.json_object[i].username + '/">'+data.json_object[i].username+'</a>'
+                      var jsCategories = '<a href="/categories/' + data.json_object[i].category_urlstext + '/">' + data.json_object[i].category_title + '</a>';
+                      var jsArtApprovedComments = data.json_object[i].approved_comments;
+                      $("#update-list").prepend('<input type="text" size="40" value="'+data.json_object[i].id+'" name="'+data.json_object[i].id+'" class="id-article">\
+                         <div class="card mb-4">'+ jsImg +
+                         '<div class="card-body">\
+                         <h2 class="card-title">'+data.json_object[i].title + '</h2>'+
+                         jsText + jsUrlArt +
+                         '</div><div class="card-footer text-muted">' +
+                         jsDate +' by '+ jsAuthor + ' Categories: ' + jsCategories + ' Comments: '+
+                         jsArtApprovedComments +
+                        '</div>\
+                         </div>');
+
+
+                    });
+
+                    $.each( data.json_page.reverse(), function( i, item ) {
+                        if (data.json_page[0].has_other_pages) {
+
+                           var  jsHasPrevious = '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
+                           if (data.json_page[0].has_previous) jsHasPrevious = '<li class="page-item"><a class="page-link" href="' +urlPathname+'?page='+(data.json_page[0].current_page-1)+'">&laquo;</a></li>';
+
+                           var  jsHasNext = '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
+                           if (data.json_page[0].has_next) jsHasNext = '<li class="page-item"><a class="page-link" href="' +urlPathname+'?page='+(data.json_page[0].current_page+1)+'">&raquo;</a></li>';
+
+                           var jsPageNumber = '';
+                           for (var i = 0; i < data.json_page[0].paginator_page_range; i++) {
+                              var j = i + 1;
+                              if (j == data.json_page[0].current_page) {
+                                jsPageNumber += '<li class="page-item active"><span class="page-link">'+ j +' <span class="sr-only">(current)</span></span></li>';
+                              } else {
+                                jsPageNumber += '<li class="page-item"><a class="page-link" href="' +urlPathname+ '?page='+ j +'">'+ j +'</a></li>';
+                              }
+
+                           }
+
+                           $("#paginated").append('  <ul class="pagination justify-content-center mb-4">'+
+                           jsHasPrevious+jsPageNumber+jsHasNext+'</ul>');
+                        }
+
+                    });
+
+                    myarr = myarrJSON;
+                }
+
+
+              });
+          }, 6000);
+
+
+
+
+        }
+
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+{% extends 'blog/content.html' %}
+
+{% block place_article %}
+  <h1 class="mt-4"></h1>
+
+  <!-- Search input -->
+  {% ifequal mode_list "search" %}
+    <div class="card my-4">
+      <h5 class="card-header">Search results</h5>
+      <div class="card-body">
+        <div class="input-group" >
+          <div class="col-12">
+            <form method="GET" class="form-inline" action="{% url 'blog:search_list'  %}">
+              <input type="text" class="form-control"  name="srchtxt" placeholder="Search for..." value="{{ srchtxt }}" >
+              <span class="input-group-btn">
+                <button class="btn btn-secondary" type="submit">Go!</button>
+              </span>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endifequal %}
+
+  <!-- List articles -->
+  {% if list_article_pag %}
+    <div id="update-list">
+    {% for article in list_article_pag %}
+      <input type="text" size="40" value="{{ article.pk }}" name="{{ article.pk }}" class="id-article">
+      <div class="card mb-4">
+        {% if article.image %}
+          <div class="span2">
+            <img  src="{{ MEDIA_URL }}{{ article.image }}">
+          </div>
+        {% endif %}
+        <div class="card-body">
+          <h2 class="card-title">{{ article.title }}</h2>
+          <p class="card-text">{% autoescape off %}{{ article.text|striptags|linebreaksbr|truncatechars:400 }}{% endautoescape %}</p>
+          <a href="{% url 'blog:article_detail' pk=article.pk %}" class="btn btn-primary">Read More &rarr;</a>
+        </div>
+        <div class="card-footer text-muted">
+          {% ifequal mode_list "draft" %}
+            created: {{ article.created_date|date:'d-m-Y' }} by
+          {% else %}
+            {{ article.published_date|date:'d-m-Y' }} by
+          {% endifequal %}
+          <a href="{% url 'blog:article_author_list' authorName=article.author.username %}">{{ article.author }}</a>
+          Categories: <a href="{% url 'blog:article_categories_list' categoryName=article.category.urlstext %}">{{ article.category }}</a> Comments: {{ article.approved_comments.count }}
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  {% else %}
+    <p>No blog are available.</p>
+  {% endif %}
+
+  <!-- Pagination -->
+  {% if is_paginated  %}
+    <div id="paginated">
+    <ul class="pagination justify-content-center mb-4">
+      {% if page_obj.has_previous %}
+        {% ifequal mode_list "search" %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&srchtxt={{ srchtxt }}">&laquo;</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% endifequal %}
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+      {% endif %}
+      {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+          <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+          {% ifequal mode_list "search" %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}&srchtxt={{ srchtxt }}">{{ i }}</a></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+          {% endifequal %}
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        {% ifequal mode_list "search" %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&srchtxt={{ srchtxt }}">&raquo;</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% endifequal %}
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+    </div>
+  {% endif %}
+
+{% endblock place_article %}

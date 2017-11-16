@@ -1,0 +1,43 @@
+{% extends 'blog/index.html' %}
+
+{% load collection_extras %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <!-- Blog Entries Column -->
+    <div class="col-lg-8">
+      <!-- Blog Article -->
+      {% block place_article %}
+      {% endblock %}
+    </div>
+
+    <!-- Sidebar Widgets Column -->
+    <div class="col-lg-4">
+      <!-- Search Widget -->
+      <div class="card my-4">
+        <h5 class="card-header">Search</h5>
+        <div class="card-body">
+          {% get_widgets_search %}
+        </div>
+      </div>
+
+      <!-- Categories Widget -->
+      <div class="card my-4">
+        <h5 class="card-header">Categories</h5>
+        <div class="card-body">
+          {% get_widgets %}
+        </div>
+      </div>
+
+      <!-- Side Widget -->
+      <div class="card my-4">
+        <h5 class="card-header">Calendar</h5>
+        <div class="card-body">
+          {% get_widgets_calendar %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

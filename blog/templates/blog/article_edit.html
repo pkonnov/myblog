@@ -1,0 +1,34 @@
+{% extends 'blog/content.html' %}
+
+{% block place_article %}
+  <div class="card my-4">
+    <h5 class="card-header">New Article:</h5>
+    <div class="card-body">
+      <p>Attention! Only an author can edit an article</p>
+      <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-group">
+          {{ form.title.errors }}
+          <label for="title">Title:</label>
+          {{ form.title }}
+        </div>
+        <div class="form-group">
+          {{ form.category.errors }}
+          <label for="category">Category:</label>
+          {{ form.category }}
+        </div>
+        <div class="form-group">
+          {{ form.text.errors }}
+          <label for="id_sender">Text:</label>
+          {{ form.text }}
+        </div>
+        <div class="form-group">
+          {{ form.image.errors }}
+          <label for="id_sender">Image:</label>
+          {{ form.image }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </form>
+    </div>
+  </div>
+{% endblock place_article %}

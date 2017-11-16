@@ -1,0 +1,25 @@
+{% extends 'blog/content.html' %}
+
+{% block place_article %}
+
+<div class="card my-4">
+  <h5 class="card-header">Login:</h5>
+    <div class="card-body">
+      {% load myfilters %}
+      <form method="POST" class="post-form" action="{% url 'login' %}">{% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-group">
+          {{ form.username.errors }}
+          <label for="username">Username:</label>
+          {{ form.username|addclass:"form-control" }}
+        </div>
+        <div class="form-group">
+          {{ form.password.errors }}
+          <label for="password">Password:</label>
+          {{ form.password|addclass:"form-control" }}
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+    </div>
+  </div>
+{% endblock place_article %}

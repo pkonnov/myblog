@@ -1,0 +1,75 @@
+{% extends 'blog/content.html' %}
+
+{% block place_article %}
+  <h1 class="mt-4">{{ article.title }}</h1>
+  <p class="lead">
+    by
+    <a href="{% url 'blog:article_author_list' authorName=article.author.username %}">{{ article.author }}</a>
+    Categories: <a href="{% url 'blog:article_categories_list' categoryName=article.category.urlstext %}">{{ article.category }}</a>
+  </p>
+  <hr>
+
+  {% if article.published_date %}
+    <div class="date">
+      <p>Posted on {{ article.published_date }}</p>
+    </div>
+  {% else %}
+    {% if user.is_authenticated %}
+      {% if user == article.author %}
+        <a class="btn btn-primary" href="{% url 'blog:article_publish' pk=article.pk %}">&nbsp;Publish</a>
+      {% else %}
+        <p class="text-info">The right to publish only from the author</p>
+      {% endif %}
+    {% else %}
+      <p>No posted</p>
+    {% endif %}
+  {% endif %}
+  <hr>
+
+  {% if article.image %}
+    <div class="span2">
+      <img  src="{{ MEDIA_URL }}{{ article.image }}">
+    </div>
+   <hr>
+  {% endif %}
+
+  <p>{% autoescape off %}{{ article.text }}{% endautoescape %}</p>
+  <hr>
+
+  {% if user.is_authenticated %}
+    {% if user == article.author %}
+      <a class="btn btn-primary" href="{% url 'blog:article_edit' pk=article.pk %}"><span class="glyphicon glyphicon-pencil">&nbsp;Edit</span></a>
+      <a class="btn btn-primary" href="{% url 'blog:article_delete' pk=article.pk %}"><span class="glyphicon glyphicon-remove">&nbsp;Delete</span></a>
+      <hr>
+    {% endif %}
+  {% endif %}
+
+  <div class="card my-4">
+    <h5 class="card-header">Leave a Comment:</h5>
+    <div class="card-body">
+      <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  {% for comment in comments %}
+    <div class="media mb-4">
+      <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+      <div class="media-body">
+        {% if not comment.approved_comment %}
+          <a class="btn btn-primary" href="{% url 'blog:comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+          <a class="btn btn-primary" href="{% url 'blog:comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+        {% endif %}
+        <h5 class="mt-0">Comment by {{ comment.author }} : {{ comment.created_date }}</h5>
+        <p>{{ comment.text|linebreaks }}</p>
+      </div>
+    </div>
+    {% empty %}
+    <p></p>
+  {% endfor %}
+
+
+
+{% endblock place_article %}
