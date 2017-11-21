@@ -11,7 +11,7 @@
 
   {% if article.published_date %}
     <div class="date">
-      <p>Posted on {{ article.published_date }}</p>
+      <p>Posted on {{ article.published_date|date:'d-m-Y' }}</p>
     </div>
   {% else %}
     {% if user.is_authenticated %}
@@ -62,7 +62,7 @@
           <a class="btn btn-primary" href="{% url 'blog:comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
           <a class="btn btn-primary" href="{% url 'blog:comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
         {% endif %}
-        <h5 class="mt-0">Comment by {{ comment.author }} : {{ comment.created_date }}</h5>
+        <h5 class="mt-0">Comment by {{ comment.author }} : {{ comment.created_date|date:'d-m-Y' }}</h5>
         <p>{{ comment.text|linebreaks }}</p>
       </div>
     </div>

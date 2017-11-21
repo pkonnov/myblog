@@ -1,0 +1,6 @@
+*.pyc
+*~
+__pycache__
+myvenv
+/media/blog/images/
+/media/uploads

@@ -84,12 +84,19 @@ DATABASES = {
     'default': {
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'myblog',
-        'USER': 'root',
-        'PASSWORD': '1111',
-        'HOST': 'localhost',
-        'PORT': '5432',
+
+        #'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': 'myblog',
+        #'USER': 'root',
+        #'PASSWORD': '1111',
+        #'HOST': 'localhost',
+        #'PORT': '5432',
+
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'volmirs45$myblog',
+        'USER': 'volmirs45',
+        'PASSWORD': 'Starost53',
+        'HOST': 'volmirs45.mysql.pythonanywhere-services.com',
     }
 }
 
