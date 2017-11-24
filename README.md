@@ -17,17 +17,13 @@ Quick Start
 $ git clone https://github.com/vol-mir/myblog.git
 $ cd myblog.com
 $ virtualenv --python=python3.4 myvenv
-$ pip install commands
-$ python manage.py createsuperuser
+$ source myvenv/bin/activate
+$ pip install django~=1.11.4
+$ pip install django_cleanup~=1.0.1
+$ pip install django-ckeditor~=5.3.0
+$ pip install mysqlclient
+$ pip install Pillow
+$ python manage.py migrate
+$ ython manage.py makemigrations
+$ ython manage.py createsuperuser
 ```
-
-PIP Commands
-------------
-
-|Script|
-|---|
-|pip install django~=1.11.4|
-|pip install django_cleanup~=1.0.1|
-|pip install django-ckeditor~=5.3.0|
-|pip install mysqlclient|
-|pip install Pillow|
