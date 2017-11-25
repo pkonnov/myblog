@@ -10,20 +10,8 @@ Demo at http://volmirs45.pythonanywhere.com/
 - Ajax
 - PostgreSQL
 
-Quick Start
------------
-
-```shell
-$ git clone https://github.com/vol-mir/myblog.git
-$ cd myblog.com
-$ virtualenv --python=python3.4 myvenv
-$ source myvenv/bin/activate
-$ pip install django~=1.11.4
-$ pip install django_cleanup~=1.0.1
-$ pip install django-ckeditor~=5.3.0
-$ pip install mysqlclient
-$ pip install Pillow
-$ python manage.py migrate
-$ ython manage.py makemigrations
-$ ython manage.py createsuperuser
+Dependency Files
+----------------
+```
+pip install -r requirements.txt
 ```
